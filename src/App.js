@@ -1,9 +1,10 @@
 import './App.css';
+import AlarmControl from './containers/AlarmControl';
 
 function App() {
   return (
     <div>
-      hello
+      <AlarmControl />
     </div>
   );
 }

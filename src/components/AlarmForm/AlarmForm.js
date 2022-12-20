@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
 
 const AlarmForm = (props) => {
-    const formItems = props.fields.map(field => FormItem(field));
+    const formItems = Object.keys(props.formFields).map((name) => FormItem(name, props.formFields[name], props.handleChangeAlarm));
     return (
         <form>
             { formItems }
@@ -12,15 +12,14 @@ const AlarmForm = (props) => {
     );
 }
 
-const FormItem = (field) => {
-    const [value, setValue] = useState('');
+const FormItem = (name, field, handleChangeAlarm) => {
     const options = [...Array(field.max - field.min + 1).keys()].map(i => (<MenuItem key={i + field.min} value={i + field.min}>{i + field.min}</MenuItem>));
     return (
-        <FormControl fullWidth key={field.name}>
-            <InputLabel id={`${field.name}`}>
-                {field.name}
+        <FormControl fullWidth key={name}>
+            <InputLabel id={`${name}`}>
+                {name}
             </InputLabel>
-            <Select value={value} label={field.name} onChange={(e)=>setValue(e.target.value)}>
+            <Select value={field.value} label={field.name} onChange={(e) => handleChangeAlarm(name, e.target.value)}>
                 {options}
             </Select>
         </FormControl>
@@ -29,7 +28,8 @@ const FormItem = (field) => {
 
 AlarmForm.propTypes = {
     handleAddAlarm: PropTypes.func,
-    fields: PropTypes.array,
+    handleChangeAlarm: PropTypes.func,
+    formFields: PropTypes.object,
 }
 
 export default AlarmForm

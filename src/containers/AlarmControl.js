@@ -6,32 +6,50 @@ class AlarmControl extends React.Component {
     constructor(props) {
         super(props);
         this.addAlarm = this.addAlarm.bind(this);
+        this.changeAlarm = this.changeAlarm.bind(this);
 
         this.state = {
+            formFields: {
+                'Year': { min: 2022, max: 2023, value: '' },
+                'Month': { min: 1, max: 12, value: '' },
+                'Day': { min: 1, max: 31, value: '' },
+                'Hour': { min: 1, max: 24, value: '' },
+                'Minute': { min: 0, max: 59, value: '' },
+            },
             alarmList: [{ year: 2022, month: 12, day: 20, hour: 12, minute: 20 }],  // contains list of alarms defined
         }
     }
 
-    generateAlarm(year, month, day, hour, minute) {
-        return { year: year, month: month, day: day, hour: hour, minute: minute }
+    generateAlarm() {
+        const formFields = this.state.formFields;
+        return {
+            year: formFields['Year'].value,
+            month: formFields['Month'].value,
+            day: formFields['Day'].value,
+            hour: formFields['Hour'].value,
+            minute: formFields['Minute'].value,
+        }
     }
 
-    addAlarm(year, month, day, hour, minute) {
-        const alarm = { year: year, month: month, day: day, hour: hour, minute: minute };
+    addAlarm() {
+        const alarm = this.generateAlarm();
         const alarmList = [ ...this.state.alarmList ];
-        // console.log(alarmList);
         alarmList.push(alarm);
         this.setState({ alarmList })
     }
 
-    setValue(field, value) {
-
+    changeAlarm(field, value) {
+        const formFields = {...this.state.formFields};
+        if (field in formFields) {
+            formFields[field].value = value;
+        }
+        this.setState({ formFields });
     }
 
     render() {
         return (
             <div>
-                <AlarmForm fields={this.formFields} handleAddAlarm={this.addAlarm} />
+                <AlarmForm formFields={this.state.formFields} handleAddAlarm={this.addAlarm} handleChangeAlarm={this.changeAlarm} />
                 <AlarmList alarms={this.state.alarmList} />
             </div>
         );

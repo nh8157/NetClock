@@ -1,6 +1,7 @@
 import React from 'react';
 import AlarmList from '../components/AlarmList/AlarmList';
 import AlarmForm from '../components/AlarmForm/AlarmForm';
+import { Alert, AlertTitle, Stack, Box } from '@mui/material';
 
 class AlarmControl extends React.Component {
     constructor(props) {
@@ -9,6 +10,8 @@ class AlarmControl extends React.Component {
         this.changeAlarm = this.changeAlarm.bind(this);
 
         this.state = {
+            success: false,
+            errorMsg: '',
             formFields: {
                 'Year': { min: 2022, max: 2023, value: '' },
                 'Month': { min: 1, max: 12, value: '' },
@@ -31,7 +34,7 @@ class AlarmControl extends React.Component {
         }
     }
 
-    alarmExists(alarm) {
+    checkAlarmExists(alarm) {
         return this.state.alarmList.find(element => {
             let flag = true;
             Object.keys(element).forEach(key => {
@@ -45,22 +48,27 @@ class AlarmControl extends React.Component {
 
     addAlarm() {
         const alarm = this.generateAlarm();
+        let success = true;
         const hasUndefined = Object.keys(alarm).find(element => alarm[element] === '') !== undefined;
-        const alarmExists = this.alarmExists(alarm);
+        const alarmExists = this.checkAlarmExists(alarm);
         if (!hasUndefined && !alarmExists) {
             const alarmList = [...this.state.alarmList];
             // check if every field of alarm is not null and alarm does not exist
             alarmList.push(alarm);
             this.setState({ alarmList });
         } else if (hasUndefined) {
-            // show banner
-        } else if (alarmExists) {
-            // show banner
+            success = false;
+            const errorMsg = 'Please fill out all fields.';
+            this.setState({ errorMsg });
+        } else {
+            success = false;
+            const errorMsg = 'Alarm already exists.';
+            this.setState({ errorMsg });
         }
         // flush all values in the box
-        const formFields = {...this.state.formFields};
+        const formFields = { ...this.state.formFields };
         Object.keys(formFields).map(key => formFields[key].value = '');
-        this.setState({ formFields });
+        this.setState({ formFields, success });
     }
 
     changeAlarm(field, value) {
@@ -71,12 +79,32 @@ class AlarmControl extends React.Component {
         this.setState({ formFields });
     }
 
+    resetSuccessState() {
+        const success = false;
+        const errorMsg = '';
+        this.setState({ success, errorMsg });
+    }
+
     render() {
         return (
-            <div>
+            <Stack spacing={2}>
+                <Box height={55}>
+                    {
+                        !this.state.success && this.state.errorMsg !== '' &&
+                        <Alert severity='error' onClose={() => this.resetSuccessState()}>
+                            <AlertTitle>{this.state.errorMsg}</AlertTitle>
+                        </Alert>
+                    }
+                    {
+                        this.state.success &&
+                        <Alert severity='success' onClose={() => this.resetSuccessState()}>
+                            <AlertTitle>Successful.</AlertTitle>
+                        </Alert>
+                    }
+                </Box>
                 <AlarmForm formFields={this.state.formFields} handleAddAlarm={this.addAlarm} handleChangeAlarm={this.changeAlarm} />
                 <AlarmList alarms={this.state.alarmList} />
-            </div>
+            </Stack>
         );
     }
 }

@@ -1,28 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { InputLabel, Select, MenuItem, Button, Grid, Container, FormControl } from '@mui/material';
 
 const AlarmForm = (props) => {
     const formItems = Object.keys(props.formFields).map((name) => FormItem(name, props.formFields[name], props.handleChangeAlarm));
     return (
-        <form>
-            { formItems }
-            <Button variant='contained' onClick={props.handleAddAlarm}>Add</Button>
-        </form>
+        <Container>
+            <Grid container spacing={2} justifyContent='space-between' alignContent='center'>
+                {formItems}
+                <Grid item xs={12} md={2} margin='auto'>
+                    <Button variant='contained' onClick={props.handleAddAlarm}>Add</Button>
+                </Grid>
+            </Grid>
+        </Container>
     );
 }
 
 const FormItem = (name, field, handleChangeAlarm) => {
     const options = [...Array(field.max - field.min + 1).keys()].map(i => (<MenuItem key={i + field.min} value={i + field.min}>{i + field.min}</MenuItem>));
     return (
-        <FormControl fullWidth key={name}>
-            <InputLabel id={`${name}`}>
-                {name}
-            </InputLabel>
-            <Select value={field.value} label={field.name} onChange={(e) => handleChangeAlarm(name, e.target.value)}>
-                {options}
-            </Select>
-        </FormControl>
+        <Grid item key={name} xs={12} md={2}>
+            <FormControl fullWidth>
+                <InputLabel id={`${name}`}>
+                    {name}
+                </InputLabel>
+                <Select value={field.value} label={field.name} onChange={(e) => handleChangeAlarm(name, e.target.value)}>
+                    {options}
+                </Select>
+            </FormControl>
+        </Grid>
     );
 }
 

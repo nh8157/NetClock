@@ -31,15 +31,40 @@ class AlarmControl extends React.Component {
         }
     }
 
+    alarmExists(alarm) {
+        return this.state.alarmList.find(element => {
+            let flag = true;
+            Object.keys(element).forEach(key => {
+                if (element[key] !== alarm[key]) {
+                    flag = false;
+                }
+            });
+            return flag;
+        }) !== undefined;
+    }
+
     addAlarm() {
         const alarm = this.generateAlarm();
-        const alarmList = [ ...this.state.alarmList ];
-        alarmList.push(alarm);
-        this.setState({ alarmList })
+        const hasUndefined = Object.keys(alarm).find(element => alarm[element] === '') !== undefined;
+        const alarmExists = this.alarmExists(alarm);
+        if (!hasUndefined && !alarmExists) {
+            const alarmList = [...this.state.alarmList];
+            // check if every field of alarm is not null and alarm does not exist
+            alarmList.push(alarm);
+            this.setState({ alarmList });
+        } else if (hasUndefined) {
+            // show banner
+        } else if (alarmExists) {
+            // show banner
+        }
+        // flush all values in the box
+        const formFields = {...this.state.formFields};
+        Object.keys(formFields).map(key => formFields[key].value = '');
+        this.setState({ formFields });
     }
 
     changeAlarm(field, value) {
-        const formFields = {...this.state.formFields};
+        const formFields = { ...this.state.formFields };
         if (field in formFields) {
             formFields[field].value = value;
         }

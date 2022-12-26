@@ -1,7 +1,7 @@
 import React from 'react';
 import AlarmList from '../components/AlarmList/AlarmList';
 import AlarmForm from '../components/AlarmForm/AlarmForm';
-import { Alert, AlertTitle, Stack, Box } from '@mui/material';
+import { Alert, AlertTitle, Stack, Box, Grid } from '@mui/material';
 
 class AlarmControl extends React.Component {
     constructor(props) {
@@ -87,24 +87,29 @@ class AlarmControl extends React.Component {
 
     render() {
         return (
-            <Stack spacing={2}>
-                <Box height={55}>
-                    {
-                        !this.state.success && this.state.errorMsg !== '' &&
-                        <Alert severity='error' onClose={() => this.resetSuccessState()}>
-                            <AlertTitle>{this.state.errorMsg}</AlertTitle>
-                        </Alert>
-                    }
-                    {
-                        this.state.success &&
-                        <Alert severity='success' onClose={() => this.resetSuccessState()}>
-                            <AlertTitle>Successful.</AlertTitle>
-                        </Alert>
-                    }
-                </Box>
-                <AlarmForm formFields={this.state.formFields} handleAddAlarm={this.addAlarm} handleChangeAlarm={this.changeAlarm} />
-                <AlarmList alarms={this.state.alarmList} />
-            </Stack>
+            <Grid container columns={12} sx={{ flexflow: 1 }}>
+                <Grid item xs={6} md={8} margin='auto'>
+                    <Grid item xs={6} md={8} margin='auto'></Grid>
+                    <Stack spacing={2}>
+                        <Box minHeight={58}>
+                            {
+                                !this.state.success && this.state.errorMsg !== '' &&
+                                <Alert severity='error' onClose={() => this.resetSuccessState()}>
+                                    <AlertTitle>{this.state.errorMsg}</AlertTitle>
+                                </Alert>
+                            }
+                            {
+                                this.state.success &&
+                                <Alert severity='success' onClose={() => this.resetSuccessState()}>
+                                    <AlertTitle>Successful.</AlertTitle>
+                                </Alert>
+                            }
+                        </Box>
+                        <AlarmForm formFields={this.state.formFields} handleAddAlarm={this.addAlarm} handleChangeAlarm={this.changeAlarm} />
+                        <AlarmList alarms={this.state.alarmList} />
+                    </Stack>
+                </Grid>
+            </Grid>
         );
     }
 }

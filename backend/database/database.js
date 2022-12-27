@@ -1,7 +1,8 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
-const { AlarmSchema } = require('../models/schema')
+const { AlarmSchema } = require('../models/schema');
 
-const URL = "mongodb://127.0.0.1:27017/alarms";
+const URL = process.env.DB_URL;
 
 async function connectDB() {
     await mongoose.connect(URL);
@@ -12,21 +13,25 @@ function createModel() {
     return mongoose.model('Alarm', alarmSchema);
 }
 
-function addAlarm(model) {
+// Use the self-defined schema to create a new alarm instance, store into the DB
+// Return the results of storing
+async function addAlarm(alarm) {
+    return await alarm.save();
+}
+
+async function rmvAlarm(model, objectId) {
+    return await model.deleteOne({ "_id": objectId });
+}
+
+function getAlarm(model, query) {
 
 }
 
-function rmvAlarm(model) {
-
-}
-
-function getAlarm(model) {
-
-}
-
-function updateAlarm(model) {
-
+async function updateAlarm(model, objectId, queries) {
+    // Use findById to locate the record
+    // Then update the field in the record
+    return await model.updateOne({ "_id": objectId }, queries);
 }
 
 
-module.exports = { connectDB, createModel };
+module.exports = { connectDB, createModel, addAlarm, rmvAlarm, updateAlarm };

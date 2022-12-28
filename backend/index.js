@@ -16,7 +16,7 @@ app.post('/rmv-alarm/:objectId/', (req, res) => {
 });
 
 // Query is passed in as part of the URL
-app.get('/get-alarm/:query', (req, res) => {
+app.get('/get-alarm/', (req, res) => {
 	handleGetAlarm(Alarm, req, res);
 })
 

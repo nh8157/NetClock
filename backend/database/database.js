@@ -23,8 +23,9 @@ async function rmvAlarm(model, objectId) {
     return await model.deleteOne({ "_id": objectId });
 }
 
-function getAlarm(model, query) {
-
+async function getAlarm(model, query) {
+    // can only process simple queries
+    return await model.find(query, {year: 1, month: 1, day: 1, hour: 1, minute: 1, status: 1, _id: 1});
 }
 
 async function updateAlarm(model, objectId, queries) {
@@ -34,4 +35,4 @@ async function updateAlarm(model, objectId, queries) {
 }
 
 
-module.exports = { connectDB, createModel, addAlarm, rmvAlarm, updateAlarm };
+module.exports = { connectDB, createModel, addAlarm, rmvAlarm, getAlarm, updateAlarm };

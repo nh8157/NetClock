@@ -1,7 +1,6 @@
 const { User, validate } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { number } = require('joi');
 
 exports.signup = async (req, res) => {
     try {
@@ -18,7 +17,7 @@ exports.signup = async (req, res) => {
 
         // hash user's password and destroy plaintext
         // every future login has to validate the password with the same hash function
-        const salt = await bcrypt.genSalt(number(process.env.SALT));
+        const salt = await bcrypt.genSalt(Number(process.env.SALT));
         const hashedPassword = await bcrypt.hash(password, salt);
 
         let user = await User.create({
@@ -54,8 +53,9 @@ exports.signin = async (req, res) => {
 
         // check if user exists
         // hash password, verify the password is the same as stored
-        const user = User.findOne({ username });
+        const user = await User.findOne({ username: username });
         if (user && (await bcrypt.compare(password, user.password))) {
+            console.log("Password match");
             // create user token
             const email = user.email;
             const token = jwt.sign(
@@ -66,8 +66,10 @@ exports.signin = async (req, res) => {
             user.token = token;
 
             res.status(200).send(user);
+        } else {
+            // return password not match
+            res.status(400).send("Username and password don't match. Please try again.");
         }
-        // return
     } catch (err) {
         console.log(err);
         res.status(400).send(err.message);

@@ -2,7 +2,7 @@ const { User, validate } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-exports.signup = async (req, res) => {
+exports.handleSignup = async (req, res) => {
     try {
         // first we validate the request with joi
         const { error } = validate(req.body);
@@ -10,6 +10,7 @@ exports.signup = async (req, res) => {
         if (error) return res.status(400).send(error.details[0].message);
 
         const { firstName, lastName, username, email, password } = req.body;
+        // might want to put this function into the database file
         oldUser = await User.findOne({ email: email });
         if (oldUser)
             // error code 409: conflict
@@ -20,6 +21,7 @@ exports.signup = async (req, res) => {
         const salt = await bcrypt.genSalt(Number(process.env.SALT));
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // might want to put this function into the database file
         let user = await User.create({
             firstName: firstName,
             lastName: lastName,
@@ -45,7 +47,7 @@ exports.signup = async (req, res) => {
     }
 }
 
-exports.signin = async (req, res) => {
+exports.handleSignin = async (req, res) => {
     // verify that necessary fields are filled out
     try {
         const { username, password } = req.body;
@@ -53,6 +55,7 @@ exports.signin = async (req, res) => {
 
         // check if user exists
         // hash password, verify the password is the same as stored
+        // might want to put this function into the database file
         const user = await User.findOne({ username: username });
         if (user && (await bcrypt.compare(password, user.password))) {
             console.log("Password match");

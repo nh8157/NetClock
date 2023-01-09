@@ -1,4 +1,4 @@
-const { handleAddAlarm, handleRmvAlarm, handleGetAlarm, handleUpdateAlarm } = require('./controllers/controllers');
+const { handleAddAlarm, handleRmvAlarm, handleGetAlarm, handleUpdateAlarm } = require('./controllers/alarm');
 const express = require('express');
 const router = require('./routes/index');
 const verify = require('./middleware/auth');

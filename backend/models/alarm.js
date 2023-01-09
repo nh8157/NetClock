@@ -16,9 +16,25 @@ const JoiSchemaAND = Joi.object({
     day: Joi.number().required(),
     hour: Joi.number().required(),
     minute: Joi.number().required(),
-    status: Joi.boolean().required(),
 });
+
+const JoiSchemaOR = Joi.object({
+    year: Joi.number().optional(),
+    month: Joi.number().optional(),
+    day: Joi.number().optional(),
+    hour: Joi.number().optional(),
+    minute: Joi.number().optional(),
+    status: Joi.boolean().optional()
+})
 
 const Alarm = mongoose.model("alarm", AlarmSchema);
 
-module.exports = { Alarm };
+const validateAND = (alarm) => {
+    return JoiSchemaAND.validate(alarm);
+}
+
+const validateOR = (alarm) => {
+    return JoiSchemaOR.validate(alarm);
+}
+
+module.exports = { Alarm, validateAND, validateOR };

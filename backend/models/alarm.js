@@ -24,7 +24,8 @@ const JoiSchemaOR = Joi.object({
     day: Joi.number().optional(),
     hour: Joi.number().optional(),
     minute: Joi.number().optional(),
-    status: Joi.boolean().optional()
+    status: Joi.boolean().optional(),
+    objectId: Joi.string().optional()
 })
 
 const Alarm = mongoose.model("alarm", AlarmSchema);

@@ -11,11 +11,11 @@ const port = 3000;
 
 app.use(express.json());
 
-app.post('/add-alarm/:year/:month/:day/:hour/:minute/', (req, res) => {
+app.post('/add-alarm', (req, res) => {
 	handleAddAlarm(req, res);
 });
 
-app.post('/rmv-alarm/:objectId/', (req, res) => {
+app.post('/rmv-alarm', (req, res) => {
 	handleRmvAlarm(req, res);
 });
 
@@ -25,11 +25,11 @@ app.post('/test-token', verify, (req, res) => {
 })
 
 // Query is passed in as part of the URL
-app.get('/get-alarm/', (req, res) => {
+app.get('/get-alarm', (req, res) => {
 	handleGetAlarm(req, res);
 })
 
-app.post('/update-alarm/:objectId/', (req, res) => {
+app.post('/update-alarm/:objectId', (req, res) => {
 	handleUpdateAlarm(req, res);
 });
 

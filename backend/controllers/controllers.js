@@ -4,10 +4,12 @@ const { createAlarm } = require('../models/util');
 const PARAMETERS_ERR = "Parameters invalid";
 const OBJECTID_ERR = "ObjectId invalid";
 const DATETIME_ERR = "Alarm datetime invalid";
+const NOALARM_ERR = "Alarm not found";
 
 function handleAddAlarm(model, req, res) {
     const isValidParams = validateParams(model, req.params, (len) => { return len === 5 });
     const isValidAlarm = validateAlarm(req.params);
+
     if (isValidParams && isValidAlarm) {
         const alarm = createAlarm(model, req.params.year, req.params.month, req.params.day, req.params.hour, req.params.minute);
         // If the record is saved successfully, then the returned result should be identical to alarm
@@ -25,7 +27,8 @@ function handleRmvAlarm(model, req, res) {
     // Validate if the object id passed in is valid
     if (validateObjectId(req.params.objectId)) {
         rmvAlarm(model, req.params.objectId).then(ret => {
-            res.send({ status: ret.deletedCount !== 0 });
+            ret.deletedCount !== 0 ? 
+                res.send({ status: true }) : res.send({ status: false, msg: NOALARM_ERR })
         });
     } else {
         res.send({ status: false, msg: OBJECTID_ERR });
@@ -51,7 +54,7 @@ function handleUpdateAlarm(model, req, res) {
         // If the alarm is valid, we update the record in the database
         updateAlarm(model, req.params.objectId, req.query).then(ret => {
             (ret.matchedCount === 1 && ret.modifiedCount === 1) ?
-                res.send({ status: true }) : res.send({ status: false, msg: "Alarm not found" });
+                res.send({ status: true }) : res.send({ status: false, msg: NOALARM_ERR });
         });
     } else if (!isValidObjectId) {
         res.send({ status: false, msg: OBJECTID_ERR });

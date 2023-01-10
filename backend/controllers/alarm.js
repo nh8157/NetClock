@@ -1,3 +1,4 @@
+const { object } = require('joi');
 const db = require('../database/database');
 const { Alarm, validateAND, validateOR } = require('../models/alarm');
 
@@ -57,21 +58,29 @@ exports.handleGetAlarm = (req, res) => {
 }
 
 exports.handleUpdateAlarm = (req, res) => {
+    let objectId = undefined;
+    try {
+        objectId = req.body.objectId;
+        delete req.body.objectId;
+    } catch {
+        return res.send({ status: false, msg: "No objectId was provided" });
+    }
+
     const { error } = validateOR(req.body);
-    const isValidObjectId = validateObjectId(req.params.objectId);
+    const isValidObjectId = validateObjectId(objectId);
     const isValidParams = error === undefined;
 
     if (isValidObjectId && isValidParams) {
         // We may first retrieve the alarm from the DB
         // apply the patches to the alarm, then validate the alarm
         // If the alarm is valid, we update the record in the database
-        db.updateAlarm(Alarm, req.params.objectId, req.body).then(ret => {
+        db.updateAlarm(Alarm, objectId, req.body).then(ret => {
             if (ret.matchedCount === 0) {
                 res.send({ status: false, msg: NOALARM_ERR });
             } else if (ret.matchedCount === 1 && ret.modifiedCount === 0) {
                 res.send({ status: false, msg: "No alarm was modified" });
             } else if (ret.matchedCount === 1 && ret.modifiedCount === 1) {
-                res.send({ status: true, id: req.params.objectId });
+                res.send({ status: true, id: objectId });
             }
         });
     } else if (!isValidObjectId) {

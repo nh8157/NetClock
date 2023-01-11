@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+// ### TESTABLE ###
 // This will stand between express framework and application logic
 exports.verify = (req, res, next) => {
     const token = req.body.token;
@@ -14,7 +15,6 @@ exports.verify = (req, res, next) => {
         // so that the object could match the schema we set
         delete req.body.token;
     } catch (err) {
-        console.log(err);
         return res.status(401).send("Invalid token.");
     }
     return next();

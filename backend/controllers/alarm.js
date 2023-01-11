@@ -1,4 +1,3 @@
-const { object } = require('joi');
 const db = require('../database/database');
 const { Alarm, validateAND, validateOR } = require('../models/alarm');
 
@@ -90,10 +89,12 @@ exports.handleUpdateAlarm = (req, res) => {
     }
 }
 
+// ### TESTABLE ###
 const validateObjectId = (objectId) => {
     return (typeof (objectId) === 'string' && new Blob([objectId]).size === 24)
 }
 
+// ### TESTABLE ###
 const validateTime = (params) => {
     return true;
 }

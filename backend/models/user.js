@@ -20,6 +20,7 @@ const JoiSchema = Joi.object({
 
 const User = mongoose.model("user", UserSchema);
 
+// ### TESTABLE ###
 // validates wheter the user has filled out all fields
 const validate = (user) => {
     return JoiSchema.validate(user);

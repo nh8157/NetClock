@@ -29,10 +29,12 @@ const JoiSchemaOR = Joi.object({
 
 const Alarm = mongoose.model("alarm", AlarmSchema);
 
+// ### TESTABLE ###
 const validateAND = (alarm) => {
     return JoiSchemaAND.validate(alarm);
 }
 
+// ### TESTABLE ###
 const validateOR = (alarm) => {
     return JoiSchemaOR.validate(alarm);
 }

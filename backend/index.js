@@ -1,4 +1,3 @@
-const { handleAddAlarm, handleRmvAlarm, handleGetAlarm, handleUpdateAlarm } = require('./controllers/alarm');
 const express = require('express');
 const { verify } = require('./middleware/auth');
 const userRouter = require('./routes/user');

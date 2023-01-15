@@ -58,7 +58,6 @@ exports.handleSignin = async (req, res) => {
         // might want to put this function into the database file
         const user = await User.findOne({ username: username });
         if (user && (await bcrypt.compare(password, user.password))) {
-            console.log("Password match");
             // create user token
             const email = user.email;
             const token = jwt.sign(
